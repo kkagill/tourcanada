@@ -1,0 +1,31 @@
+{
+  "name": "nodejs-scaffolding",
+  "version": "0.0.1",
+  "description": "Lightweight scaffolding of NodeJS applications with Gulp",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "~4.9.x",
+    "socket.io": "^1.3.5",
+    "redis": "^0.12.1",
+    "kafka-node": "^0.2.27",
+    "q": "^1.4.1"
+  },
+  "engines": {
+    "node": "0.10.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:namgk/nodejs-scaffolding.git"
+  },
+  "keywords": [
+    "node",
+    "express"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.8.10"
+  }
+}
