@@ -24,31 +24,16 @@ retrieveOffset()
             console.log('current offset: ' + data);
             offset = data;
             consumer.setOffset('sense', 0, offset);
+            consumer.on('message', function (message) {
+                console.log(message);
+                offset++;
+                saveOffset(offset);
+            });
         }, 
         function(err){
             console.log(err);
-            // cannot get offset saved locally, continue with last commit message
-            var offsetClient = new kafka.Offset(client);
-            offsetClient.fetch([
-                { topic: 'sense', partition: 0, time: -1, maxNum: 1 }
-            ], function (err, data) {
-                // data
-                // { 't': { '0': [999] } }
-                if (err === null){
-                    console.log(data);
-                    offset = data;
-                }
-            });
         }
-    )
-    .fin(function(){
-        consumer.on('message', function (message) {
-            console.log(message);
-            offset++;
-            saveOffset(offset);
-        });
-        
-    });
+    );
     
 
 function saveOffset(offset){
@@ -66,11 +51,22 @@ function retrieveOffset(){
     var d = Q.defer();
     
     fs.readFile('offsetTracker.kafka', 'utf8', function (err,data) {
-        if (err) {
-            console.log(err);
-            d.reject(new Error('Error retrieving offset'));
-        } else if (isNaN(data)) {
-            d.reject(new Error('Error reading offset'));
+        if (err || isNaN(data)) {
+            console.log(err || data);
+            
+            // cannot get offset saved locally, continue with last commit message
+            var offsetClient = new kafka.Offset(client);
+            offsetClient.fetch([
+                { topic: 'sense', partition: 0, time: -1, maxNum: 1 }
+            ], function (err, data) {
+                // data
+                // { 't': { '0': [999] } }
+                if (err === null){
+                    console.log(data);
+                    d.resolve(data['sense']['0'][0]);
+                } else
+                    d.reject(new Error('Error retrieving offset'));
+            });
         } else 
             d.resolve(data);
     });
