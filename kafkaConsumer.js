@@ -9,20 +9,34 @@ var options = {
     autoCommit: true,
     fromOffset: true
 };
-var payload = [{ topic: 'sense', offset: '3', partition: 0 }];
+
+var offset;
+
+var payload = [{ topic: 'sense', partition: 0 }];
 
 var consumer = new Consumer(client, payload, options);
-var consumerReady = false;
 
 consumer.on('error', function (err) {console.log('consumer error: ' + err)});
 
-consumer.on('ready', function (){
-   console.log('consumer ready!');
-});
-
-consumer.on('message', function (message) {
-    console.log(message);
-});
+retrieveOffset()
+    .then(
+        function(data){
+            offset = data;
+            consumer.setOffset('sense', 0, offset);
+        }, 
+        function(err){
+            console.log(er)
+        }
+    )
+    .fin(function(){
+        consumer.on('message', function (message) {
+            console.log(message);
+            offset++;
+            saveOffset(offset);
+        });
+        
+    });
+    
 
 function saveOffset(offset){
     fs.writeFile("offsetTracker.kafka", offset, function(err) {
@@ -33,7 +47,7 @@ function saveOffset(offset){
 }
 
 function retrieveOffset(){
-    var d = Q>defer();
+    var d = Q.defer();
     
     fs.readFile('offsetTracker.kafka', 'utf8', function (err,data) {
         if (err) {
@@ -45,5 +59,5 @@ function retrieveOffset(){
             d.resolve(data);
     });
     
-    return d;
+    return d.promise;
 }
