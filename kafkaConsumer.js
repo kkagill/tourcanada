@@ -1,4 +1,5 @@
 var config = require('./config'),
+    backend = require('./backendWriter'),
     kafka = require('kafka-node'),
     Consumer = kafka.Consumer,
     client = new kafka.Client(config.ZOOKEEPER),
@@ -19,21 +20,36 @@ var consumer = new Consumer(client, payload, options);
 consumer.on('error', function (err) {console.log('consumer error: ' + err)});
 
 retrieveOffset()
-    .then(
-        function(data){
-            console.log('current offset: ' + data);
-            offset = data;
-            consumer.setOffset('sense', 0, offset);
-            consumer.on('message', function (message) {
-                console.log(message);
-                offset++;
-                saveOffset(offset);
-            });
-        }, 
-        function(err){
-            console.log(err);
-        }
-    );
+.then(
+    function(data){
+        console.log('current offset: ' + data);
+        offset = data;
+        consumer.setOffset('sense', 0, offset);
+        consumer.on('message', function (kafkaMsg) {
+            // there is no batch message here.
+            offset++;
+            saveOffset(offset);
+            console.log('from kafka: ' + JSON.stringify(kafkaMsg));
+            
+            
+            if (!(kafkaMsg.tenantId && kafkaMsg.deviceId && kafkaMsg.data.value))
+                return;
+                
+            var seriesName = kafkaMsg.data.name;
+            var seriesData = kafkaMsg.data.value;
+            
+            // now put message into database
+            backend.write(kafkaMsg.tenantId, kafkaMsg.deviceId, seriesName, seriesData)
+            .then(
+                function(){console.log('success');}, 
+                function(err){console.log(err);}
+            );
+        });
+    }, 
+    function(err){
+        console.log(err);
+    }
+);
     
 
 function saveOffset(offset){
