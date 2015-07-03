@@ -31,15 +31,16 @@ retrieveOffset()
             saveOffset(offset);
             console.log('from kafka: ' + JSON.stringify(kafkaMsg));
             
+            var siberMsg = kafkaMsg.value;
             
-            if (!(kafkaMsg.tenantId && kafkaMsg.deviceId && kafkaMsg.data.value))
+            if (!(siberMsg.tenantId && siberMsg.deviceId && siberMsg.data.value))
                 return;
                 
-            var seriesName = kafkaMsg.data.name;
-            var seriesData = kafkaMsg.data.value;
+            var seriesName = siberMsg.data.name;
+            var seriesData = siberMsg.data.value;
             
             // now put message into database
-            backend.write(kafkaMsg.tenantId, kafkaMsg.deviceId, seriesName, seriesData)
+            backend.write(siberMsg.tenantId, siberMsg.deviceId, seriesName, seriesData)
             .then(
                 function(){console.log('success');}, 
                 function(err){console.log(err);}
