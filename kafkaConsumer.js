@@ -33,8 +33,10 @@ retrieveOffset()
             
             var siberMsg = kafkaMsg.value;
             
-            if (!(siberMsg.tenantId && siberMsg.deviceId && siberMsg.data.value))
+            if (!(siberMsg.tenantId && siberMsg.deviceId && siberMsg.data.value)){
+                console.log('siberMsg wrongly captured: ' + JSON.stringify(siberMsg));
                 return;
+            }
                 
             var seriesName = siberMsg.data.name;
             var seriesData = siberMsg.data.value;
