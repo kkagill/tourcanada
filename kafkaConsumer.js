@@ -5,12 +5,12 @@ var config = require('./config'),
     Q = require('q'),
     fs = require('fs');
 
+var offset;
+
 var options = {
     autoCommit: true,
     fromOffset: true
 };
-
-var offset;
 
 var payload = [{ topic: 'sense', partition: 0 }];
 
@@ -21,11 +21,24 @@ consumer.on('error', function (err) {console.log('consumer error: ' + err)});
 retrieveOffset()
     .then(
         function(data){
+            console.log('current offset: ' + data);
             offset = data;
             consumer.setOffset('sense', 0, offset);
         }, 
         function(err){
-            console.log(er)
+            console.log(err);
+            // cannot get offset saved locally, continue with last commit message
+            var offsetClient = new kafka.Offset(client);
+            offsetClient.fetch([
+                { topic: 'sense', partition: 0, time: -1, maxNum: 1 }
+            ], function (err, data) {
+                // data
+                // { 't': { '0': [999] } }
+                if (err === null){
+                    console.log(data);
+                    offset = data;
+                }
+            });
         }
     )
     .fin(function(){
@@ -39,6 +52,9 @@ retrieveOffset()
     
 
 function saveOffset(offset){
+    if (isNaN(offset))
+        return;
+        
     fs.writeFile("offsetTracker.kafka", offset, function(err) {
         if(err) {
             console.log(err);
@@ -58,6 +74,8 @@ function retrieveOffset(){
         } else 
             d.resolve(data);
     });
+    
+    
     
     return d.promise;
 }
