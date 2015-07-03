@@ -73,7 +73,7 @@ function retrieveOffset(){
     var d = Q.defer();
     
     fs.readFile('offsetTracker.kafka', 'utf8', function (err,data) {
-        if (err || isNaN(data)) {
+        if (err || isNaN(data) || (data === '')) {
             console.log(err || data);
             
             // cannot get offset saved locally, continue with last commit message
