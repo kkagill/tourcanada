@@ -69,7 +69,7 @@ retrieveOffset()
                 var desc = scode_desc[1];
                 var lat = lat_long[0];
                 var lng = lat_long[1];
-                var speed = speed_heading[0];
+                var speed = speed_heading[0].split('.')[0];// remove after decimal point
                 var heading = speed_heading[1];
                 
                 var eventData = {};
@@ -82,7 +82,6 @@ retrieveOffset()
                 // put into database
                 for (var key in eventData){
                     var val = eventData[key];
-                    console.log(key);
                     backend.write(tenantId.trim(), deviceId.trim(), key.trim(), val, null/* waiting to fix time precision of gprmc from second to millisecond*/)
                     .then(
                         function(){console.log('success');}, 
@@ -124,6 +123,10 @@ retrieveOffset()
                 var seriesData = siberMsg.data.value;
                 var seriesTimestamp = siberMsg.data.timestamp;
                 
+                if (isNaN(seriesData)){
+                    seriesData.replace('[a-zA-Z]','');
+                    seriesData.replace('%', '');
+                }
                 // now put message into database
                 backend.write(siberMsg.tenantId, siberMsg.deviceId, seriesName, seriesData, seriesTimestamp)
                 .then(
