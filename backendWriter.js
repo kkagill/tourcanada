@@ -38,8 +38,10 @@ var backend = {
     write: function(tenantId, deviceId, seriesName, data, timestamp){
         var d = Q.defer();
         var tag = {tenantId: tenantId, deviceId: deviceId};
-        
-        client.writePoint(seriesName, {time:timestamp, value: data}, tag, {precision : 'ms'}, function(err, writeResult){
+        if (!timestamp)
+            timestamp = (new Date()).getTime();
+            
+        client.writePoint(seriesName, {time:timestamp, value: data}, tag, function(err, writeResult){
             if (err) {
                 d.reject(new Error('Influx write error'));
             } else 
