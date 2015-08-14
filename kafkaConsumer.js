@@ -73,18 +73,22 @@ retrieveOffset()
                 var heading = speed_heading[1];
                 
                 var eventData = {};
-                eventData['statusCode'] = scode;
-                eventData['latitude'] = lat;
-                eventData['longitude'] = lng;
-                eventData['speedKPH'] = speed;
+                eventData['code'] = scode;
+                eventData['lat'] = lat;
+                eventData['long'] = lng;
+                eventData['speed'] = speed;
                 eventData['heading'] = heading;
                 
                 // put into database
-                backend.write(tenantId, deviceId, "gps", eventData, tstamp)
-                .then(
-                    function(){console.log('success');}, 
-                    function(err){console.log(err);}
-                );
+                for (var key in eventData){
+                    var val = eventData[key];
+                    backend.write(tenantId, deviceId, key, val, tstamp)
+                    .then(
+                        function(){console.log('success');}, 
+                        function(err){console.log(err);}
+                    );
+                }
+                
                 /*
                 pool.getConnection(function(err,connection){
                     if (err) {
