@@ -28,7 +28,7 @@ var backend = {
         
         client.writePoints(seriesName, points, function(err, writeResult){
             if (err) {
-                d.reject(new Error('Influx write error'));
+                d.reject(err);
             } else 
                 d.resolve(writeResult);
         });
@@ -43,7 +43,7 @@ var backend = {
             
         client.writePoint(seriesName, {time:timestamp, value: data}, tag, function(err, writeResult){
             if (err) {
-                d.reject(new Error('Influx write error'));
+                d.reject(err);
             } else 
                 d.resolve(writeResult);
         });
