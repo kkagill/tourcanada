@@ -73,7 +73,7 @@ retrieveOffset()
                 var heading = speed_heading[1];
                 
                 var eventData = {};
-                eventData['code'] = scode;
+                eventData['code'] = 61472;
                 eventData['lat'] = lat;
                 eventData['long'] = lng;
                 eventData['speed'] = speed;
@@ -82,7 +82,8 @@ retrieveOffset()
                 // put into database
                 for (var key in eventData){
                     var val = eventData[key];
-                    backend.write(tenantId, deviceId, key, val, tstamp)
+                    console.log(key);
+                    backend.write(tenantId.trim(), deviceId.trim(), key.trim(), val.trim(), null/* waiting to fix time precision of gprmc from second to millisecond*/)
                     .then(
                         function(){console.log('success');}, 
                         function(err){console.log(err);}
