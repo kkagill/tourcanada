@@ -4,7 +4,19 @@ var config = require('./config'),
     Consumer = kafka.Consumer,
     client = new kafka.Client(config.ZOOKEEPER),
     Q = require('q'),
-    fs = require('fs');
+    fs = require('fs');//,
+    //mysql = require('mysql');
+
+/*
+var pool = mysql.createPool({
+    connectionLimit : 100, //important
+    host     : config.MYSQL_HOST,
+    user     : config.MYSQL_USER,
+    password : config.MYSQL_PASS,
+    database : 'gts',
+    debug    :  false
+});
+*/
 
 var senseOffset, SENSE_TOPIC = 0;
 var gpsOffset, GPS_TOPIC = 1;
@@ -49,7 +61,45 @@ retrieveOffset()
                 
                 var tenantId = account_device[0];
                 var deviceId = account_device[1];
+                var date = date_t_tmz_tstamp[0];
+                var time = date_t_tmz_tstamp[1];
+                var tmz = date_t_tmz_tstamp[2];
+                var tstamp = date_t_tmz_tstamp[3];
+                var scode = scode_desc[0];
+                var desc = scode_desc[1];
+                var lat = lat_long[0];
+                var lng = lat_long[1];
+                var speed = speed_heading[0];
+                var heading = speed_heading[1];
                 
+                var eventData = {};
+                eventData['statusCode'] = scode;
+                eventData['latitude'] = lat;
+                eventData['longitude'] = lng;
+                eventData['speedKPH'] = speed;
+                eventData['heading'] = heading;
+                
+                // put into database
+                backend.write(tenantId, deviceId, "gps", eventData, tstamp)
+                .then(
+                    function(){console.log('success');}, 
+                    function(err){console.log(err);}
+                );
+                /*
+                pool.getConnection(function(err,connection){
+                    if (err) {
+                      console.log(err);
+                      return;
+                    }   
+            
+                    connection.query("insert into EventData set ?", eventData, function(err,result){
+                        connection.release();
+                    });
+            
+                    connection.on('error', function(err) {      
+                        console.log(err);
+                    });
+                }); */
                 // next ...
             } else if (kafkaMsg.topic === 'sense'){
                 senseOffset++;
@@ -58,21 +108,19 @@ retrieveOffset()
                 var siberMsg;
                 try {
                     siberMsg = JSON.parse(kafkaMsg.value);
+                    if (!(siberMsg.tenantId && siberMsg.deviceId && siberMsg.data.value))
+                        throw 'siberMsg wrongly captured';
                 } catch (e) {
-                    console.log('siberMsg wrongly captured');
+                    console.log(e);
                     return;
-                }
+                } 
                 
-                if (!(siberMsg.tenantId && siberMsg.deviceId && siberMsg.data.value)){
-                    console.log('siberMsg wrongly captured');
-                    return;
-                }
-    
                 var seriesName = siberMsg.data.name;
                 var seriesData = siberMsg.data.value;
+                var seriesTimestamp = siberMsg.data.timestamp;
                 
                 // now put message into database
-                backend.write(siberMsg.tenantId, siberMsg.deviceId, seriesName, seriesData)
+                backend.write(siberMsg.tenantId, siberMsg.deviceId, seriesName, seriesData, seriesTimestamp)
                 .then(
                     function(){console.log('success');}, 
                     function(err){console.log(err);}
