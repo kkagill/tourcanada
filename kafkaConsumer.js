@@ -52,7 +52,7 @@ retrieveOffset()
                 saveOffset(GPS_TOPIC, gpsOffset);
                 
                 var gpsPacket = kafkaMsg.value;
-                var gpsDetails = gpsPacket.split(',');
+                var gpsDetails = gpsPacket.split(', ');
                 var date_t_tmz_tstamp = gpsDetails[0].split('|');
                 var account_device = gpsDetails[1].split('|');
                 var scode_desc = gpsDetails[2].split('|');
@@ -83,7 +83,7 @@ retrieveOffset()
                 for (var key in eventData){
                     var val = eventData[key];
                     console.log(key);
-                    backend.write(tenantId.trim(), deviceId.trim(), key.trim(), val.trim(), null/* waiting to fix time precision of gprmc from second to millisecond*/)
+                    backend.write(tenantId.trim(), deviceId.trim(), key.trim(), val, null/* waiting to fix time precision of gprmc from second to millisecond*/)
                     .then(
                         function(){console.log('success');}, 
                         function(err){console.log(err);}
