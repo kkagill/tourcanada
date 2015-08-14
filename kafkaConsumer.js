@@ -124,8 +124,8 @@ retrieveOffset()
                 var seriesTimestamp = siberMsg.data.timestamp;
                 
                 if (isNaN(seriesData)){
-                    seriesData.replace('[a-zA-Z]','');
-                    seriesData.replace('%', '');
+                    seriesData = seriesData.replace(/[a-z]+[A-Z]+/,'');
+                    seriesData = seriesData.replace('%', '');
                 }
                 // now put message into database
                 backend.write(siberMsg.tenantId, siberMsg.deviceId, seriesName, seriesData, seriesTimestamp)
