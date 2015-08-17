@@ -1,32 +1,18 @@
 var config = require('./config'),
-    backend = require('./backendWriter'),
     kafka = require('kafka-node'),
     Consumer = kafka.Consumer,
     client = new kafka.Client(config.ZOOKEEPER),
     Q = require('q'),
     fs = require('fs');//,
-    //mysql = require('mysql');
 
-/*
-var pool = mysql.createPool({
-    connectionLimit : 100, //important
-    host     : config.MYSQL_HOST,
-    user     : config.MYSQL_USER,
-    password : config.MYSQL_PASS,
-    database : 'gts',
-    debug    :  false
-});
-*/
-
-var senseOffset, SENSE_TOPIC = 0;
-var gpsOffset, GPS_TOPIC = 1;
+var gpsOffset;
 
 var options = {
     autoCommit: true,
     fromOffset: true
 };
 
-var payload = [{ topic: 'sense', partition: 0 }, {topic: 'gps', partition: 0}];
+var payload = [{topic: 'gps', partition: 0}];
 
 var consumer = new Consumer(client, payload, options);
 
@@ -36,10 +22,8 @@ retrieveOffset()
 .then(
     function(data){
         console.log('local offset: ' + JSON.stringify(data));
-        senseOffset = data[SENSE_TOPIC];
-        gpsOffset = data[GPS_TOPIC];
+        gpsOffset = data;
         
-        consumer.setOffset('sense', 0, senseOffset);
         consumer.setOffset('gps', 0, gpsOffset);
         
         consumer.on('message', function (kafkaMsg) {
@@ -49,7 +33,7 @@ retrieveOffset()
             if (kafkaMsg.topic === 'gps'){
                 // Client emits a gps packet, push to opengts mysql store
                 gpsOffset++;
-                saveOffset(GPS_TOPIC, gpsOffset);
+                saveOffset(gpsOffset);
                 
                 var gpsPacket = kafkaMsg.value;
                 var gpsDetails = gpsPacket.split(', ');
@@ -78,61 +62,7 @@ retrieveOffset()
                 eventData['long'] = lng;
                 eventData['speed'] = speed;
                 eventData['heading'] = heading;
-                
-                // put into database
-                for (var key in eventData){
-                    var val = eventData[key];
-                    backend.write(tenantId.trim(), deviceId.trim(), key.trim(), val, null/* waiting to fix time precision of gprmc from second to millisecond*/)
-                    .then(
-                        function(){console.log('success');}, 
-                        function(err){console.log(err);}
-                    );
-                }
-                
-                /*
-                pool.getConnection(function(err,connection){
-                    if (err) {
-                      console.log(err);
-                      return;
-                    }   
-            
-                    connection.query("insert into EventData set ?", eventData, function(err,result){
-                        connection.release();
-                    });
-            
-                    connection.on('error', function(err) {      
-                        console.log(err);
-                    });
-                }); */
-                // next ...
-            } else if (kafkaMsg.topic === 'sense'){
-                senseOffset++;
-                saveOffset(SENSE_TOPIC, senseOffset);
-                
-                var siberMsg;
-                try {
-                    siberMsg = JSON.parse(kafkaMsg.value);
-                    if (!(siberMsg.tenantId && siberMsg.deviceId && siberMsg.data.value))
-                        throw 'siberMsg wrongly captured';
-                } catch (e) {
-                    console.log(e);
-                    return;
-                } 
-                
-                var seriesName = siberMsg.data.name;
-                var seriesData = siberMsg.data.value;
-                var seriesTimestamp = siberMsg.data.timestamp;
-                
-                if (isNaN(seriesData)){
-                    seriesData = seriesData.replace(/[a-z]+[A-Z]+/,'');
-                    seriesData = seriesData.replace('%', '');
-                }
-                // now put message into database
-                backend.write(siberMsg.tenantId, siberMsg.deviceId, seriesName, seriesData, seriesTimestamp)
-                .then(
-                    function(){console.log('success');}, 
-                    function(err){console.log(err);}
-                );
+
             }
         });
     }, 
@@ -142,29 +72,15 @@ retrieveOffset()
 );
     
 
-function saveOffset(topic, offset){
+function saveOffset(offset){
     if (isNaN(offset))
         return;
         
-    fs.readFile('offset', 'utf8', function(err, data){
-        if (err) {
+    fs.writeFile('offset', offset, function(err) {
+        if(err) {
             console.log(err);
-            return;
         }
-        
-        try {
-            data = JSON.parse(data);
-        } catch (e) {
-            data = [0,0];
-        }
-        
-        data[topic] = offset;
-        fs.writeFile('offset', JSON.stringify(data), function(err) {
-            if(err) {
-                console.log(err);
-            }
-        }); 
-    });  
+    }); 
 }
 
 function retrieveOffset(){
@@ -172,27 +88,23 @@ function retrieveOffset(){
     
     fs.readFile('offset', 'utf8', function (err,data) {
         try {
-            data = JSON.parse(data);
             d.resolve(data);
         } catch (e) {
             console.log(e);
             // cannot get offset saved locally, continue with last commit message
             var offsetClient = new kafka.Offset(client);
             offsetClient.fetch([
-                { topic: 'sense', partition: 0, time: -1, maxNum: 1 },
                 { topic: 'gps', partition: 0, time: -1, maxNum: 1 }
             ], function (err, data) {
                 // data
                 // { 't': { '0': [999] } }
                 if (err === null){
-                    d.resolve([data['sense']['0'][0], data['gps']['0'][0]]);
+                    d.resolve(data['gps']['0'][0]);
                 } else
-                    d.reject(new Error('Error retrieving offset'));
+                    d.reject('Error retrieving offset');
             });
         }
     });
-    
-    
     
     return d.promise;
 }
