@@ -107,6 +107,8 @@ function retrieveOffset(){
     
     fs.readFile('offset', 'utf8', function (err,data) {
         try {
+            if (isNaN(data))
+                throw new Error('offset read failed');
             d.resolve(data);
         } catch (e) {
             console.log(e);
