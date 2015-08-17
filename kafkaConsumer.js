@@ -23,20 +23,6 @@ var post_options = {
     }
 };
 
-var post_req = httpsClient.request(post_options, function(res) {
-    var body = '';
-    res.on('data', function(chunk) {
-        body += chunk;
-    });
-    res.on('end', function () {
-        log.info('Response: ' + body);
-    });
-});
-
-post_req.on('error', function(e){
-    log.info(e);
-});
-                
 var options = {
     autoCommit: true,
     fromOffset: true
@@ -73,7 +59,6 @@ function(data){
         var lng = lat_long[1].trim();
         
         var googlePlaceAPI = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location='+lat+','+lng+'&radius=500&types=food&key=AIzaSyAOZSIS-XmvHdLpCJ94DWQ8skWOth7_uH4';
-        log.info('Getting Google Places: ' + googlePlaceAPI);
         if (placeQueryWindow)
             httpsClient.get(googlePlaceAPI, function(res) {
                 var body = '';
@@ -85,7 +70,7 @@ function(data){
                     var places = body.results;
                     var pushPlaces = [];
                     
-                    forEach(places, function(place){
+                    places.forEach(function(place){
                         var location = place.geometry.location;
                         var name = place.name;
                         var p = {name: name, location: location};
@@ -97,6 +82,19 @@ function(data){
                         if (!err){
                             var sendingMessage = JSON.stringify({'data':pushPlaces, 'to': gcmtoken});
                             log.info(sendingMessage);
+                            var post_req = httpsClient.request(post_options, function(res) {
+                                var body = '';
+                                res.on('data', function(chunk) {
+                                    body += chunk;
+                                });
+                                res.on('end', function () {
+                                    log.info('Response: ' + body);
+                                });
+                            });
+                            
+                            post_req.on('error', function(e){
+                                log.info(e);
+                            });
                             post_req.write(sendingMessage);
                             post_req.end();
                         } else
