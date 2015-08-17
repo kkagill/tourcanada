@@ -69,7 +69,7 @@ function(data){
         var lat = lat_long[0].trim();
         var lng = lat_long[1].trim();
         
-        var googlePlaceAPI = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location='+lat+lng+'&radius=500&types=food&key=AIzaSyAOZSIS-XmvHdLpCJ94DWQ8skWOth7_uH4';
+        var googlePlaceAPI = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location='+lat+','+lng+'&radius=500&types=food&key=AIzaSyAOZSIS-XmvHdLpCJ94DWQ8skWOth7_uH4';
         log.info('Getting Google Places: ' + googlePlaceAPI);
         if (placeQueryWindow)
             httpsClient.get(googlePlaceAPI, function(res) {
