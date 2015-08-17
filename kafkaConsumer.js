@@ -112,7 +112,7 @@ function retrieveOffset(){
             else
                 d.resolve(data);
         } catch (e) {
-            console.log(e);
+            log.error(e);
             // cannot get offset saved locally, continue with last commit message
             var offsetClient = new kafka.Offset(client);
             offsetClient.fetch([
