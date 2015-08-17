@@ -32,7 +32,6 @@ var post_req = httpsClient.request(post_options, function(res) {
 
 post_req.on('error', function(e){
     log.info(e);
-    response.status(502).send();
 });
                 
 var options = {
@@ -55,7 +54,7 @@ function(data){
     
     consumer.on('message', function (kafkaMsg) {
         // there is no batch message here.
-        console.log('from kafka: ' + JSON.stringify(kafkaMsg));
+        log.info('from kafka: ' + JSON.stringify(kafkaMsg));
         
         gpsOffset++;
         saveOffset(gpsOffset);
@@ -72,11 +71,17 @@ function(data){
         
         if (placeQueryWindow)
             httpsClient.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location='+lat+lng+'&radius=500&types=food&key=AIzaSyAOZSIS-XmvHdLpCJ94DWQ8skWOth7_uH4', function(res) {
-                log.info(JSON.stringify(res.body))
+                var body = '';
+                res.on('data', function(chunk) {
+                    body += chunk;
+                });
+                res.on('end', function() {
+                    log.info(body);
+                });
                 
                 redis.get(accountID + ':' + deviceID + '.gcmtoken', function(err, gcmtoken){
                     if (!err){
-                        var sendingMessage = {'data':res.body, 'to': gcmtoken};
+                        var sendingMessage = {'data':body, 'to': gcmtoken};
                         post_req.write(JSON.stringify(sendingMessage));
                         post_req.end();
                     }
@@ -108,7 +113,7 @@ function retrieveOffset(){
     fs.readFile('offset', 'utf8', function (err,data) {
         try {
             if (isNaN(data) || err)
-                throw new Error('offset read failed');
+                throw 'offset read failed';
             else
                 d.resolve(data);
         } catch (e) {
