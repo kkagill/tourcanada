@@ -107,9 +107,10 @@ function retrieveOffset(){
     
     fs.readFile('offset', 'utf8', function (err,data) {
         try {
-            if (isNaN(data))
+            if (isNaN(data) || err)
                 throw new Error('offset read failed');
-            d.resolve(data);
+            else
+                d.resolve(data);
         } catch (e) {
             console.log(e);
             // cannot get offset saved locally, continue with last commit message
@@ -119,10 +120,10 @@ function retrieveOffset(){
             ], function (err, data) {
                 // data
                 // { 't': { '0': [999] } }
-                if (err === null){
-                    d.resolve(data['gps']['0'][0]);
-                } else
+                if (err){
                     d.reject('Error retrieving offset');
+                } else
+                    d.resolve(data['gps']['0'][0]);
             });
         }
     });
