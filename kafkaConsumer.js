@@ -79,17 +79,17 @@ function(data){
                 });
                 res.on('end', function() {
                     body = JSON.parse(body);
+                    redis.get(accountID + ':' + deviceID + '.gcmtoken', function(err, gcmtoken){
+                        if (!err){
+                            var sendingMessage = JSON.stringify({'data':body.results, 'to': gcmtoken});
+                            log.info(sendingMessage);
+                            post_req.write(sendingMessage);
+                            post_req.end();
+                        } else
+                            log.error(err);
+                    });
                 });
                 
-                redis.get(accountID + ':' + deviceID + '.gcmtoken', function(err, gcmtoken){
-                    if (!err){
-                        var sendingMessage = JSON.stringify({'data':body.results, 'to': gcmtoken});
-                        log.info(sendingMessage);
-                        post_req.write(sendingMessage);
-                        post_req.end();
-                    } else
-                        log.error(err);
-                });
             }).on('error', function(e) {
                 log.error("Places query failed- " + e);
             });
