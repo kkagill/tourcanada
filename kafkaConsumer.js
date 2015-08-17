@@ -24,9 +24,12 @@ var post_options = {
 };
 
 var post_req = httpsClient.request(post_options, function(res) {
-    res.setEncoding('utf8');
-    res.on('data', function (chunk) {
-        log.info('Response: ' + chunk);
+    var body = '';
+    res.on('data', function(chunk) {
+        body += chunk;
+    });
+    res.on('end', function () {
+        log.info('Response: ' + body);
     });
 });
 
@@ -79,9 +82,20 @@ function(data){
                 });
                 res.on('end', function() {
                     body = JSON.parse(body);
+                    var places = body.results;
+                    var pushPlaces = [];
+                    
+                    forEach(places, function(place){
+                        var location = place.geometry.location;
+                        var name = place.name;
+                        var p = {name: name, location: location};
+                        pushPlaces.push(p);
+                    });
+                    
+                    
                     redis.get(accountID + ':' + deviceID + '.gcmtoken', function(err, gcmtoken){
                         if (!err){
-                            var sendingMessage = JSON.stringify({'data':body.results, 'to': gcmtoken});
+                            var sendingMessage = JSON.stringify({'data':pushPlaces, 'to': gcmtoken});
                             log.info(sendingMessage);
                             post_req.write(sendingMessage);
                             post_req.end();
