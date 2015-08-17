@@ -58,7 +58,7 @@ function(data){
         var lat = lat_long[0].trim();
         var lng = lat_long[1].trim();
         
-        var googlePlaceAPI = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location='+lat+','+lng+'&radius=500&types=food&key=AIzaSyAOZSIS-XmvHdLpCJ94DWQ8skWOth7_uH4';
+        var googlePlaceAPI = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location='+lat+','+lng+'&radius=300&types=food&key=AIzaSyAOZSIS-XmvHdLpCJ94DWQ8skWOth7_uH4';
         if (placeQueryWindow)
             httpsClient.get(googlePlaceAPI, function(res) {
                 var body = '';
@@ -77,10 +77,9 @@ function(data){
                         pushPlaces.push(p);
                     });
                     
-                    
                     redis.get(accountID + ':' + deviceID + '.gcmtoken', function(err, gcmtoken){
                         if (!err){
-                            var sendingMessage = JSON.stringify({'data':pushPlaces, 'to': gcmtoken});
+                            var sendingMessage = JSON.stringify({'data':{place: pushPlaces}, 'to': gcmtoken});
                             log.info(sendingMessage);
                             var post_req = httpsClient.request(post_options, function(res) {
                                 var body = '';
