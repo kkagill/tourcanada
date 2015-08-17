@@ -2,11 +2,39 @@ var config = require('./config'),
     kafka = require('kafka-node'),
     Consumer = kafka.Consumer,
     client = new kafka.Client(config.ZOOKEEPER),
+    redis = require('redis').createClient(),
+    log = require('./log'),
+    httpsClient = require('https'),
     Q = require('q'),
     fs = require('fs');//,
 
 var gpsOffset;
+var placeQueryWindow = false;
 
+setTimeout(function() {placeQueryWindow = placeQueryWindow ? false : true}, 5000);
+
+var post_options = {
+    host: 'android.googleapis.com',
+    path: '/gcm/send',
+    method: 'POST',
+    headers: {
+      'Authorization': 'key=AIzaSyAOZSIS-XmvHdLpCJ94DWQ8skWOth7_uH4',
+      'Content-Type': 'application/json'
+    }
+};
+
+var post_req = httpsClient.request(post_options, function(res) {
+    res.setEncoding('utf8');
+    res.on('data', function (chunk) {
+        log.info('Response: ' + chunk);
+    });
+});
+
+post_req.on('error', function(e){
+    log.info(e);
+    response.status(502).send();
+});
+                
 var options = {
     autoCommit: true,
     fromOffset: true
@@ -18,58 +46,49 @@ var consumer = new Consumer(client, payload, options);
 
 consumer.on('error', function (err) {console.log('consumer error: ' + err)});
 
-retrieveOffset()
-.then(
-    function(data){
-        console.log('local offset: ' + JSON.stringify(data));
-        gpsOffset = data;
+retrieveOffset().then(
+function(data){
+    console.log('local offset: ' + JSON.stringify(data));
+    gpsOffset = data;
+    
+    consumer.setOffset('gps', 0, gpsOffset);
+    
+    consumer.on('message', function (kafkaMsg) {
+        // there is no batch message here.
+        console.log('from kafka: ' + JSON.stringify(kafkaMsg));
         
-        consumer.setOffset('gps', 0, gpsOffset);
+        gpsOffset++;
+        saveOffset(gpsOffset);
         
-        consumer.on('message', function (kafkaMsg) {
-            // there is no batch message here.
-            console.log('from kafka: ' + JSON.stringify(kafkaMsg));
-            
-            if (kafkaMsg.topic === 'gps'){
-                // Client emits a gps packet, push to opengts mysql store
-                gpsOffset++;
-                saveOffset(gpsOffset);
+        var gpsPacket = kafkaMsg.value;
+        var gpsDetails = gpsPacket.split(', ');
+        var account_device = gpsDetails[1].split('|');
+        var lat_long = gpsDetails[3].split('|');
+        
+        var accountID = account_device[0].trim();
+        var deviceID = account_device[1].trim();
+        var lat = lat_long[0].trim();
+        var lng = lat_long[1].trim();
+        
+        if (placeQueryWindow)
+            httpsClient.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location='+lat+lng+'&radius=500&types=food&key=AIzaSyAOZSIS-XmvHdLpCJ94DWQ8skWOth7_uH4', function(res) {
+                log.info(JSON.stringify(res.body))
                 
-                var gpsPacket = kafkaMsg.value;
-                var gpsDetails = gpsPacket.split(', ');
-                var date_t_tmz_tstamp = gpsDetails[0].split('|');
-                var account_device = gpsDetails[1].split('|');
-                var scode_desc = gpsDetails[2].split('|');
-                var lat_long = gpsDetails[3].split('|');
-                var speed_heading = gpsDetails[4].split('|');
-                
-                var tenantId = account_device[0];
-                var deviceId = account_device[1];
-                var date = date_t_tmz_tstamp[0];
-                var time = date_t_tmz_tstamp[1];
-                var tmz = date_t_tmz_tstamp[2];
-                var tstamp = date_t_tmz_tstamp[3];
-                var scode = scode_desc[0];
-                var desc = scode_desc[1];
-                var lat = lat_long[0];
-                var lng = lat_long[1];
-                var speed = speed_heading[0].split('.')[0];// remove after decimal point
-                var heading = speed_heading[1];
-                
-                var eventData = {};
-                eventData['code'] = 61472;
-                eventData['lat'] = lat;
-                eventData['long'] = lng;
-                eventData['speed'] = speed;
-                eventData['heading'] = heading;
-
-            }
-        });
-    }, 
-    function(err){
-        console.log(err);
-    }
-);
+                redis.get(accountID + ':' + deviceID + '.gcmtoken', function(err, gcmtoken){
+                    if (!err){
+                        var sendingMessage = {'data':res.body, 'to': gcmtoken};
+                        post_req.write(JSON.stringify(sendingMessage));
+                        post_req.end();
+                    }
+                });
+            }).on('error', function(e) {
+                log.error("Places query failed- " + e);
+            });
+    });
+}, 
+function(err){
+    console.log(err);
+});
     
 
 function saveOffset(offset){
