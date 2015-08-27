@@ -11,7 +11,7 @@ var config = require('./config'),
 var gpsOffset;
 var placeQueryWindow = false;
 
-setTimeout(function() {placeQueryWindow = placeQueryWindow ? false : true}, 5000);
+setTimeout(function() {placeQueryWindow = placeQueryWindow ? false : true}, 000);
 
 var post_options = {
     host: 'android.googleapis.com',

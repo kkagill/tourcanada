@@ -1,0 +1,14 @@
+<div id="trip-content">
+<div id="trip-map">
+    <div id="map-canvas"></div>
+    <div id="class" ng-repeat="marker in markers | orderBy : 'title'">
+    </div>
+</div>
+<div id="tripDetail">
+    <span class="label">{{trip.name}}</span>
+    <h4 class="label">Description: {{trip.desc}}</h4>
+    <h4 class="label">Average Economy: {{trip.avgEcon}}</h4>
+    <h4 class="label">Total Trip Distance: {{trip.distance}}</h4><br/>
+    <button class="btn">Share</button>
+</div>
+</div>

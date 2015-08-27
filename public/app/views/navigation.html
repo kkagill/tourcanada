@@ -1,0 +1,69 @@
+<div class="container header clearfix" ng-controller="NavigationCtrl">
+    <nav>
+      <ul class="nav nav-pills pull-right">
+        <li role="presentation"><a href="#/">Home</a></li>
+        <li role="presentation" ng-show="loggedIn"><a href="#/account">My Account</a></li>
+        <li role="presentation" ng-show="loggedIn"><a href="#/driving" >My Driving</a></li>
+        <li role="presentation" ng-show="loggedIn"><a href="#/trips" >My Trips</a></li>
+        <li role="presentation" ng-show="loggedIn"><a href="#/friends" >My Friends</a></li>
+        <li role="presentation" ng-show="loggedIn"><a href="" ng-click='logout()' >Log Out</a></li>
+        <li role="presentation" ng-show="!loggedIn"><a href="" ng-click='openLoginModal()'>Log In</a></li>
+        <li role="presentation" ng-show="!loggedIn"><a href="" ng-click='openSignUpModal()'>Sign Up</a></li>
+        
+      </ul>
+    </nav>
+    <h3 class="text-muted">KeeBoo</h3>
+    
+        
+    <!-- Modal -->
+    <div class="modal fade" id="login-dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form ng-submit="loginClicked()">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Login</h4>
+              </div>
+              <div class="modal-body">
+                <div class="input-group">
+                  <input type="text" class="form-control" ng-model="username" placeholder="Username" aria-describedby="basic-addon1">
+                  <input type="password" class="form-control" ng-model="password" placeholder="Password" aria-describedby="basic-addon1">
+                  <div class="alert alert-info" role="alert" ng-show="wrongInfo">Something wrong, try again?</div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Login</button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    
+         
+    <!-- Modal -->
+    <div class="modal fade" id="signup-dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form ng-submit="signupClicked()">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Sign Up</h4>
+              </div>
+              <div class="modal-body">
+                <div class="input-group">
+                  <input type="text" class="form-control" ng-model="username" placeholder="Username" aria-describedby="basic-addon1">
+                  <input type="password" class="form-control" ng-model="password" placeholder="Password" aria-describedby="basic-addon1">
+                  <input type="email" class="form-control" ng-model="email" placeholder="Email" aria-describedby="basic-addon1">
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Sign Up</button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+</div>
+

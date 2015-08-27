@@ -1,0 +1,156 @@
+/* Space out content a bit */
+html {
+    height: 100%;
+}
+body {
+  height: 100%;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  background: white;
+}
+
+/* Everything but the jumbotron gets side spacing for mobile first views */
+.header,
+.marketing,
+.footer {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* Custom page header */
+.header {
+  border-bottom: 1px solid #e5e5e5;
+}
+/* Make the masthead heading the same height as the navigation */
+.header h3 {
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: 40px;
+  padding-bottom: 19px;
+}
+
+/* Custom page footer */
+.footer {
+  padding-top: 19px;
+  color: #777;
+  border-top: 1px solid #e5e5e5;
+}
+
+/* Customize container */
+@media (min-width: 768px) {
+  .container {
+    max-width: 800px;
+  }
+}
+.container {
+    height: 100%;
+}
+.container-narrow > hr {
+  margin: 30px 0;
+}
+
+/* Main marketing message and sign up button */
+.jumbotron {
+  text-align: center;
+  border-bottom: 1px solid #e5e5e5;
+}
+.jumbotron .btn {
+  font-size: 21px;
+  padding: 14px 24px;
+}
+
+/* Supporting marketing content */
+.marketing {
+  margin: 40px 0;
+}
+.marketing p + h4 {
+  margin-top: 28px;
+}
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+  /* Remove the padding we set earlier */
+  .header,
+  .marketing,
+  .footer {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  /* Space out the masthead */
+  .header {
+    margin-bottom: 30px;
+  }
+  /* Remove the bottom border on the jumbotron for visual effect */
+  .jumbotron {
+    border-bottom: 0;
+  }
+}
+
+.big-button {
+    height: 50%;
+    width: 50%;
+    max-width: 190px;
+    float: left;
+    border: solid;
+    position: relative;
+}
+
+.button-icon {
+    height: 60%;
+}
+
+.button-label {
+    height: 40%;
+    text-align: center;
+    padding-top: 10px;
+}
+.button-icon  img{
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    padding-top: 30px;
+}
+
+.home {
+    bottom: 20px;
+    top: 20px;
+    /* right: 20px; */
+    left: 20px;
+    height: 100%;
+    /* position: absolute; */
+}
+.nav-brand-img {
+    height: 150%;
+    margin-top: -5px;
+}
+
+.friend-image {
+    width: 60px;
+    height: 60px;
+    border: solid;
+    margin-top: 10px;
+    margin-left: 6px;
+    margin-right: 5px;
+}
+
+#trip-content {
+    height: 70%;
+}
+
+#trip-map {
+    height: 100%;
+}
+
+#map-canvas {
+    height: 100%;
+}
+
+.friendDetails.list-group-item-heading {
+    /*line-height: 2;*/
+}
+
+.view-placeholder {
+    height: 100%;
+}

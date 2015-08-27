@@ -1,0 +1,8 @@
+<div class="list-group"  ng-repeat="friend in friends">
+  <img class="pull-left friend-image" ng-src="{{friend.imgUrl}}"/>
+  <a href="#/friends/{{friend.id}}" class="list-group-item active">
+    <h4 class="list-group-item-heading">{{friend.name}}</h4>
+    <p class="list-group-item-text">Car: {{friend.car}}</p>
+    <p class="list-group-item-text">Economy: {{friend.avgEcon}}</p>
+  </a>
+</div>
