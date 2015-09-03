@@ -6,6 +6,7 @@ trips.use(function timeLog(req, res, next) {
   console.log('Time: ', Date.now());
   next();
 });
+
 // define the home page route
 trips.get('/', function(req, res) {
   res.send('hi: ' + JSON.stringify(req.user));
