@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name socialdriveApp.controller:MainCtrl
+ * @name keeboo.controller:MainCtrl
  * @description
  * # MainCtrl
- * Controller of the socialdriveApp
+ * Controller of the keeboo
  */
-angular.module('socialdriveApp')
+angular.module('keeboo')
   .controller('MainCtrl', function ($scope, $location) {
     
   });

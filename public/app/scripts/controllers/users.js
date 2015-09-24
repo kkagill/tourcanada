@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name socialdriveApp.controller:TripdetailCtrl
+ * @name keeboo.controller:TripdetailCtrl
  * @description
  * # TripdetailCtrl
- * Controller of the socialdriveApp
+ * Controller of the keeboo
  */
-angular.module('socialdriveApp')
-  .controller('TripDetailCtrl', function ($scope) {
+angular.module('keeboo')
+  .controller('UsersCtrl', function ($scope) {
     
     var mapOptions = {
             zoom: 4,

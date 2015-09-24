@@ -2,14 +2,14 @@
 
 /**
  * @ngdoc overview
- * @name socialdriveApp
+ * @name keeboo
  * @description
- * # socialdriveApp
+ * # keeboo
  *
  * Main module of the application.
  */
 angular
-  .module('socialdriveApp', [
+  .module('keeboo', [
     'ngAnimate',
     'ngCookies',
     'ngResource',
@@ -24,37 +24,21 @@ angular
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
-      .when('/trips', {
-        templateUrl: 'views/tripslist.html',
-        controller: 'TripsListCtrl'
+      .when('/stats', {
+        templateUrl: 'views/stats.html',
+        controller: 'StatsCtrl'
       })
-      .when('/trips/:tripId', {
-        templateUrl: 'views/tripdetail.html',
-        controller: 'TripDetailCtrl'
+      .when('/users', {
+        templateUrl: 'views/users.html',
+        controller: 'UsersCtrl'
       })
-      .when('/friends', {
-        templateUrl: 'views/friends.html',
-        controller: 'FriendsCtrl'
+      .when('/cars', {
+        templateUrl: 'views/cars.html',
+        controller: 'CarsCtrl'
       })
-      .when('/start', {
-        templateUrl: 'views/start.html',
-        controller: 'StartCtrl'
-      })
-      .when('/friends/:friendId', {
-        templateUrl: 'views/frienddetail.html',
-        controller: 'FriendDetailCtrl'
-      })
-      .when('/me', {
-        templateUrl: 'views/userhome.html',
-        controller: 'UserHomeCtrl'
-      })
-      .when('/account', {
-        templateUrl: 'views/useraccount.html',
-        controller: 'UserAccountCtrl'
-      })
-      .when('/driving', {
-        templateUrl: 'views/userdriving.html',
-        controller: 'UserDrivingCtrl'
+      .when('/cars/:id', {
+        templateUrl: 'views/cardetail.html',
+        controller: 'CarDetailCtrl'
       })
       .otherwise({
         redirectTo: '/'

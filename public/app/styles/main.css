@@ -154,3 +154,7 @@ body {
 .view-placeholder {
     height: 100%;
 }
+
+.label {
+  color: black;
+}

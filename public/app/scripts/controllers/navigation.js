@@ -1,4 +1,4 @@
-angular.module('socialdriveApp')
+angular.module('keeboo')
   .controller('NavigationCtrl', function ($scope, $location) {
     if (Parse.User.current())
         $scope.loggedIn = true;

@@ -2,10 +2,9 @@
     <nav>
       <ul class="nav nav-pills pull-right">
         <li role="presentation"><a href="#/">Home</a></li>
-        <li role="presentation" ng-show="loggedIn"><a href="#/account">My Account</a></li>
-        <li role="presentation" ng-show="loggedIn"><a href="#/driving" >My Driving</a></li>
-        <li role="presentation" ng-show="loggedIn"><a href="#/trips" >My Trips</a></li>
-        <li role="presentation" ng-show="loggedIn"><a href="#/friends" >My Friends</a></li>
+        <li role="presentation" ng-show="loggedIn"><a href="#/stats" >Stats</a></li>
+        <li role="presentation" ng-show="loggedIn"><a href="#/users" >Users Map</a></li>
+        <li role="presentation" ng-show="loggedIn"><a href="#/cars" >Cars</a></li>
         <li role="presentation" ng-show="loggedIn"><a href="" ng-click='logout()' >Log Out</a></li>
         <li role="presentation" ng-show="!loggedIn"><a href="" ng-click='openLoginModal()'>Log In</a></li>
         <li role="presentation" ng-show="!loggedIn"><a href="" ng-click='openSignUpModal()'>Sign Up</a></li>

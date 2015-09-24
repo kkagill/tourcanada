@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name socialdriveApp.controller:FrienddetailCtrl
+ * @name keeboo.controller:FrienddetailCtrl
  * @description
  * # FrienddetailCtrl
- * Controller of the socialdriveApp
+ * Controller of the keeboo
  */
-angular.module('socialdriveApp')
+angular.module('keeboo')
   .controller('FriendDetailCtrl', function ($scope, $routeParams) {
     $scope.friendId = $routeParams.friendId;
     

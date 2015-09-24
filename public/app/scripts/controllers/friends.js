@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name socialdriveApp.controller:FriendsCtrl
+ * @name keeboo.controller:FriendsCtrl
  * @description
  * # FriendsCtrl
- * Controller of the socialdriveApp
+ * Controller of the keeboo
  */
-angular.module('socialdriveApp')
+angular.module('keeboo')
   .controller('FriendsCtrl', function ($scope) {
     var trip = function (id, name, date, econ){
         this.name = name;

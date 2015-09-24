@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name socialdriveApp.controller:AboutCtrl
+ * @name keeboo.controller:AboutCtrl
  * @description
  * # AboutCtrl
- * Controller of the socialdriveApp
+ * Controller of the keeboo
  */
-angular.module('socialdriveApp')
+angular.module('keeboo')
   .controller('AboutCtrl', function ($scope) {
     $scope.awesomeThings = [
       'HTML5 Boilerplate',

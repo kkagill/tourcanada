@@ -1,4 +1,4 @@
-angular.module('socialdriveApp')
+angular.module('keeboo')
   .controller('UserHomeCtrl', function ($scope, $http) {
         
   });
