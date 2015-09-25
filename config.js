@@ -7,8 +7,8 @@ var config = function() {
 			  MYSQL_HOST: 'nhongwest.ctibijov3ynm.us-west-2.rds.amazonaws.com',
 			  MYSQL_USER: 'nhong',
 			  MYSQL_PASS: 'eh',
-			  LOGFILE:  '/Users/namtrang/.keeboo/log',
-			  LOGLEVEL: 0, // 0: to stdout, 1: fatal, 2: error, 3: warn, 4: info, 5: debug
+			  LOG_FILE:  '/Users/namtrang/.keeboo/log',
+			  LOG_LEVEL: 0, // 0: to stdout, 1: fatal, 2: error, 3: warn, 4: info, 5: debug
 			  PORT: 7000,
 			  SPORT: 7443
 			};
@@ -20,8 +20,8 @@ var config = function() {
 			  MYSQL_HOST: 'nhongwest.ctibijov3ynm.us-west-2.rds.amazonaws.com',
 			  MYSQL_USER: 'nhong',
 			  MYSQL_PASS: 'eh',
-			  LOGFILE:  '/Users/namtrang/.keeboo/log',
-			  LOGLEVEL: 0, // 0: to stdout, 1: fatal, 2: error, 3: warn, 4: info, 5: debug
+			  LOG_FILE:  '/home/ec2-user/.keeboo/log',
+			  LOG_LEVEL: 5, // 0: to stdout, 1: fatal, 2: error, 3: warn, 4: info, 5: debug
 			  PORT: 80,
 			  SPORT: 443
 			};
@@ -33,8 +33,8 @@ var config = function() {
 			  MYSQL_HOST: 'nhongwest.ctibijov3ynm.us-west-2.rds.amazonaws.com',
 			  MYSQL_USER: 'nhong',
 			  MYSQL_PASS: 'eh',
-			  LOGFILE:  '/Users/namtrang/.keeboo/log',
-			  LOGLEVEL: 0, // 0: to stdout, 1: fatal, 2: error, 3: warn, 4: info, 5: debug
+			  LOG_FILE:  '/home/ec2-user/.keeboo/log',
+			  LOG_LEVEL: 2, // 0: to stdout, 1: fatal, 2: error, 3: warn, 4: info, 5: debug
 			  PORT: 80,
 			  SPORT: 443
 			};
