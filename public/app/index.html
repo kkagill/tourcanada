@@ -13,6 +13,7 @@
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/app-green.css" />
     <!-- endbuild -->
   </head>
   <body ng-app="keeboo">
@@ -53,6 +54,7 @@
        ga('send', 'pageview');
     </script>
 
+
     <!-- build:js(.) scripts/oldieshim.js -->
     <!--[if lt IE 9]>
     <script src="bower_components/es5-shim/es5-shim.js"></script>
@@ -89,11 +91,13 @@
     <script src="scripts/controllers/userhome.js"></script>
     <script src="scripts/controllers/userdriving.js"></script>
     <script src="scripts/controllers/users.js"></script>
+    <script src="data/data.json"></script>
     <!-- endbuild -->
-    
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDU7aoIXI88Ncy6B6A6XQSbi868o7JiUbY"></script>
-    <script src="http://www.parsecdn.com/js/parse-1.5.0.min.js"></script>
 
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1ZZ9g2u0bDYDedLgmVfCph_GfHE7jKZQ"></script>
+    <script src="http://www.parsecdn.com/js/parse-1.5.0.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js"></script>
+    <script src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer_compiled.js"></script>
 
     <script>
         Parse.initialize("BsEmOPNi1onRk8caO98utAjvrZgvIl7st6Ftn32A", "TUJVhnBVVi9vZ4GdHZ1CU2UasQHQs4U6RqDNf9Ak");
