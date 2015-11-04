@@ -1,10 +1,41 @@
 <div id="trip-content">
-	<div id="trip-map">
-	    <div id="map-canvas"></div>
-	    <div id="class" ng-repeat="marker in markers | orderBy : 'title'">
-	    </div>
-	</div>
-	<div id="stats">
-	    </br>Total active user:
-	</div>
+    <div id="trip-map">
+        <div id="map-canvas"></div>
+        <div id="class" ng-repeat="marker in markers | orderBy : 'title'">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+            <div class="panel price panel-red">
+                <div class="panel-heading  text-center">
+                    <h3>VANCOUVER</h3>
+                </div>
+                <div class="panel-body text-center">
+                    <p class="lead" style="font-size:20px"><strong>Active Cars: {{countVanCars}}</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+            <div class="panel price panel-blue">
+                <div class="panel-heading arrow_box text-center">
+                    <h3>BURNABY</h3>
+                </div>
+                <div class="panel-body text-center">
+                    <p class="lead" style="font-size:20px"><strong>Active Cars: {{countBurCars}}</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+            <div class="panel price panel-green">
+                <div class="panel-heading arrow_box text-center">
+                    <h3>COQUITLAM</h3>
+                </div>
+                <div class="panel-body text-center">
+                    <p class="lead" style="font-size:20px"><strong>Active Cars: {{countCoqCars}}</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

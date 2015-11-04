@@ -1,19 +1,18 @@
-<div class="container header clearfix" ng-controller="NavigationCtrl">
+<header class="header-basic-light" ng-controller="NavigationCtrl">
+	<div class="header-limiter">
     <nav>
       <ul class="nav nav-pills pull-right">
         <li role="presentation"><a href="#/">Home</a></li>
-        <li role="presentation" ng-show="loggedIn"><a href="#/stats" >Stats</a></li>
-        <li role="presentation" ng-show="loggedIn"><a href="#/users" >Users Map</a></li>
-        <li role="presentation" ng-show="loggedIn"><a href="#/cars" >Cars</a></li>
-        <li role="presentation" ng-show="loggedIn"><a href="" ng-click='logout()' >Log Out</a></li>
+        <li role="presentation" ng-show="loggedIn"><a href="#/stats">Stats</a></li>
+        <li role="presentation" ng-show="loggedIn"><a href="#/users">Users Map</a></li>
+        <li role="presentation" ng-show="loggedIn"><a href="#/cars">Cars</a></li>
+        <li role="presentation" ng-show="loggedIn"><a href="" ng-click='logout()'>Log Out</a></li>
         <li role="presentation" ng-show="!loggedIn"><a href="" ng-click='openLoginModal()'>Log In</a></li>
         <li role="presentation" ng-show="!loggedIn"><a href="" ng-click='openSignUpModal()'>Sign Up</a></li>
-        
       </ul>
     </nav>
-    <h3 class="text-muted">KeeBoo</h3>
-    
-        
+    <h1><a href="#">KeeBoo</a></h1>
+
     <!-- Modal -->
     <div class="modal fade" id="login-dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div class="modal-dialog" role="document">
@@ -38,8 +37,7 @@
         </div>
       </div>
     </div>
-    
-         
+
     <!-- Modal -->
     <div class="modal fade" id="signup-dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div class="modal-dialog" role="document">
@@ -64,5 +62,5 @@
         </div>
       </div>
     </div>
-</div>
-
+  </div>
+</header>

@@ -6,7 +6,7 @@ body {
   height: 100%;
   padding-top: 20px;
   padding-bottom: 20px;
-  background: white;
+  background: #eaf0f2;
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
@@ -147,6 +147,7 @@ body {
     height: 100%;
 }
 
+
 .friendDetails.list-group-item-heading {
     /*line-height: 2;*/
 }
@@ -158,3 +159,10 @@ body {
 .label {
   color: black;
 }
+
+.row {
+    margin-right: -150px;
+    margin-left: -15px;
+    padding-top: 50px;
+    padding-left: 80px;
+  }
