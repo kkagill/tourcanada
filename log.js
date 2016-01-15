@@ -14,19 +14,19 @@ var log = {
     info: function(msg){
         if (level < INFO)
             console.log('INFO: ' + msg);
-        else    
+        else
         fs.appendFile(logFile, 'INFO: ' + msg + '\n');
     },
     debug: function(msg){
         if (level < DEBUG)
             console.log('DEBUG: ' + msg);
-        else    
+        else
         fs.appendFile(logFile, 'DEBUG: ' + msg + '\n');
     },
     error: function(err){
         if (level < ERROR)
             console.log('ERROR: ' + err);
-        else    
+        else
         fs.appendFile(logFile, 'ERROR: ' + err + '\n');
     }
 }
